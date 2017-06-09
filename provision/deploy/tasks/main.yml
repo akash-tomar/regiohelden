@@ -1,0 +1,6 @@
+- name: install virtualenv
+  pip:
+    executable: pip3
+    requirements: /home/bank_regiohelden/requirements.txt
+  become: yes
+  become_user: root
