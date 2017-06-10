@@ -135,7 +135,6 @@ STATICFILES_DIRS = (
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
 TEMPLATE_CONTEXT_PROCESSORS = (
    'django.contrib.auth.context_processors.auth',
    'django.core.context_processors.debug',
@@ -147,6 +146,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
    'social.apps.django_app.context_processors.backends',
    'social.apps.django_app.context_processors.login_redirect',
 )
+
 
 AUTHENTICATION_BACKENDS = (
    'social.backends.google.GoogleOAuth2',
@@ -167,7 +167,6 @@ SOCIAL_AUTH_PIPELINE = (
     'bank_users.pipeline.save_profile',
 )
 
-# LOGIN_REDIRECT_URL = '/'
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "272123585549-mhsimumq4972gh8fda03ehgmvoi7r7to"
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "UitXtDH4HR4u6XGjLfd9eUuF"
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '272123585549-mhsimumq4972gh8fda03ehgmvoi7r7to'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'UitXtDH4HR4u6XGjLfd9eUuF'
