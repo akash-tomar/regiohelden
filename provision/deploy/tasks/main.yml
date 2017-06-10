@@ -1,4 +1,4 @@
-- name: install virtualenv
+- name: install requirements.txt
   pip:
     executable: pip3
     requirements: /home/bank_regiohelden/requirements.txt
