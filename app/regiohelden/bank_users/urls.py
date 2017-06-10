@@ -21,10 +21,10 @@ from django.conf.urls import include
 
 urlpatterns = [
     url(r'^$', home, name='home'),
-    url(r'^add/',createBankingUser,name='addUser')
-    url(r'^delete/',deleteBankingUser,name='deleteUser')
-    url(r'^update/',updateBankingUser,name='updateUser')
-    url(r'^view/',viewBankingUser,name='viewUser')
-    url(r'^login/',login,name='login')
-    url(r'^logout/',logout,name='logout')
+    url(r'^add/',createBankingUser,name='addUser'),
+    url(r'^delete/',deleteBankingUser,name='deleteUser'),
+    url(r'^update/',updateBankingUser,name='updateUser'),
+    url(r'^view/',readBankingUser,name='viewUser'),
+    url(r'^login/',login,name='login'),
+    url(r'^logout/',logout,name='logout'),
 ]
