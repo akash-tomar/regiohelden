@@ -1,6 +1,7 @@
 {% if not created %}
 	<h3>Bank user creation failed.</h3>
 {% endif %}
+<a href="{% url 'bank_users:home' %}">Home</a>
 <form action="{% url 'bank_users:addUser' %}" method="post">
     {% csrf_token %}
     {{ iban }}

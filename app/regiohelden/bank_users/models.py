@@ -20,6 +20,6 @@ class CustomUser(models.Model):
 class BankUser(models.Model):
 	user = models.OneToOneField(CustomUser,related_name="bank_user",blank=True,null=True)
 	iban = models.OneToOneField(IBANDetail,related_name="bank_user")
-	creator = models.OneToOneField(User,related_name="bank_create_user",blank=True,null=True)
+	creator = models.ForeignKey(User,related_name="bank_create_user",blank=True,null=True)
 	def __str__(self):
 		return str(self.user.email)
