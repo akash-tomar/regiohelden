@@ -57,6 +57,8 @@ def createBankingUser(request):
 		userform = UserForm(request.POST)
 
 		# check whether it's valid:
+		# import pdb; pdb.set_trace()
+		# userform_ = userform.clean_names()
 		if userform.is_valid() and ibanform.is_valid():
 			first_name = userform.cleaned_data.get('first_name')
 			last_name = userform.cleaned_data.get('last_name')
@@ -108,8 +110,6 @@ def updateBankingUser(request):
 	if request.method=="POST":
 		body_unicode = request.body.decode('utf-8')
 		data = json.loads(body_unicode)
-
-
 
 		first_name = data.get('old_first_name')
 		last_name = data.get('old_last_name')
