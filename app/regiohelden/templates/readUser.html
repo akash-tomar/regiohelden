@@ -1,14 +1,15 @@
+{% extends 'base.html' %}
+
 {% load staticfiles %}
 
-<head>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+{% block script %}
 	<script src="{% static 'js/readUser.js' %}"></script>
-	<script>
-		var url = "{% url 'bank_users:viewUser' %}";
-	</script>
-</head>
-<body>
-<a href="{% url 'bank_users:home' %}">Home</a>
+	<script>var url = "{% url 'bank_users:viewUser' %}";</script>
+
+{% endblock %}
+
+{% block main %}
+	<a href="{% url 'bank_users:home' %}">Home</a>
 	<div id="getdetails">  
 	    {% csrf_token %}
 	    {{ form }}
@@ -16,4 +17,4 @@
 	</div>
 	<div id="showdetails"> 
 	</div>
-</body>
+{% endblock %}

@@ -1,19 +1,19 @@
+<div><a>Hello {{ user.get_full_name|default:user.username }}!</a></div>
+<div><a href="{% url 'bank_users:logout' %}">Logout</a></div><br>
+
 {% if created %}
-	<h3>Bank user created.</h3>
+	<h3>Bank user created.</h3><br>
 {% endif %}
 
 {% if updated %}
-	<h3>Bank user updated.</h3>
+	<h3>Bank user updated.</h3><br>
 {% endif %}
 
 {% if deleted %}
-	<h3>Bank user deleted.</h3>
+	<h3>Bank user deleted.</h3><br>
 {% endif %}
 
-<a>Hello {{ user.get_full_name|default:user.username }}!</a>
-<a href="{% url 'bank_users:logout' %}">Logout</a>
-
-<a href="{% url 'bank_users:addUser' %}">Add user</a>
-<a href="{% url 'bank_users:viewUser' %}">View user</a>
-<a href="{% url 'bank_users:updateUser' %}">Update user</a>
-<a href="{% url 'bank_users:deleteUser' %}">Delete user</a>
+<div><a href="{% url 'bank_users:addUser' %}">Add user</a></div><br>
+<div><a href="{% url 'bank_users:viewUser' %}">View user</a></div><br>
+<div><a href="{% url 'bank_users:updateUser' %}">Update user</a></div><br>
+<div><a href="{% url 'bank_users:deleteUser' %}">Delete user</a></div>

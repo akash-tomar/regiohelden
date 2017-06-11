@@ -1,15 +1,10 @@
-{% load staticfiles %}
+{% extends 'base.html' %}
 
-<head>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<script src="{% static 'js/updateUser.js' %}"></script>
-</head>
-
-<body>
-	<a href="{% url 'bank_users:home' %}">Home</a>
+{% block main %}
+	<a href="{% url 'bank_users:home' %}">Home</a><br><br>
 
 	{% if not_deleted %}
-		Wrong combination of first name and last name.
+		Wrong combination of first name and last name.<br><br>
 	{% endif %}
 
 		<form action="{% url 'bank_users:deleteUser' %}" method="post">
@@ -18,4 +13,4 @@
 		    <input type="submit" value="Submit" />
 	    </form>
 
-</body>
+{% endblock %}
