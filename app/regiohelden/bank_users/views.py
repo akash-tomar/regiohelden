@@ -6,6 +6,8 @@ from django.core.urlresolvers import reverse
 from bank_users.forms import *
 from django.contrib.auth.models import User
 from django.http import JsonResponse
+import json
+
 def login(request):
 	if request.user.is_anonymous():
 		return render(request,'login.html',{})
@@ -20,6 +22,7 @@ def home(request):
 	if request.user.is_anonymous():
 		return HttpResponseRedirect(reverse('bank_users:login'))
 	created = False
+	updated = False
 	# import pdb; pdb.set_trace()
 	if 'create' in request.GET:
 		created = request.GET.get('create')
@@ -27,7 +30,10 @@ def home(request):
 			created=True
 		elif created=="0":
 			created=False
-	return render(request,'home.html',{'created':created})
+	if 'update' in request.GET:
+		if request.GET.get('update')=="1":
+			updated=True
+	return render(request,'home.html',{'created':created,'updated':updated})
 
 def createBankingUser(request):
 	if request.method=='GET':
@@ -57,7 +63,7 @@ def createBankingUser(request):
 			accountnumber = ibanform.cleaned_data.get('accountnumber')
 
 			user = None
-			import pdb;pdb.set_trace()
+			# import pdb;pdb.set_trace()
 			try:
 				user = CustomUser(first_name=first_name,last_name=last_name)
 				user.save()
@@ -95,7 +101,63 @@ def readBankingUser(request):
 		return render(request,'readUser.html',{'form':userform})
 
 def updateBankingUser(request):
-	return render(request,'updateUser.html',{})
+	if request.method=="POST":
+		body_unicode = request.body.decode('utf-8')
+		data = json.loads(body_unicode)
+
+		first_name = data.get('old_first_name')
+		last_name = data.get('old_last_name')
+		user = None
+		import pdb; pdb.set_trace()
+		try:
+			user = CustomUser.objects.get(first_name__icontains=first_name,last_name__icontains=last_name)
+		except:
+			return JsonResponse({"failed":"Wrong combination of first name and last name"})
+		
+		updated_fields=[]
+
+		if "first_name" in data:
+			user.first_name=data["first_name"]
+			updated_fields.append('first_name')
+		if "last_name" in data:
+			user.last_name=data["last_name"]
+			updated_fields.append('last_name')
+		user.save(update_fields=updated_fields)
+
+		updated_fields=[]
+		iban = user.bank_user.iban
+		if 'countrycode' in data:
+			iban.countrycode=data.get('countrycode')
+			updated_fields.append('countrycode')
+		if 'checksum' in data:
+			iban.checksum = data.get('checksum')
+			updated_fields.append('checksum')
+		if 'swiftcode' in data:
+			iban.swiftcode = data.get('swiftcode')
+			updated_fields.append('swiftcode')
+		if 'accountnumber' in data:
+			iban.accountnumber = data.get('accountnumber')
+			updated_fields.append('accountnumber')
+
+		iban.save(update_fields=updated_fields)
+		return JsonResponse({"success":True})
+
+	if request.method=="GET":
+		if "first_name" in request.GET and "last_name" in request.GET:
+			first_name = request.GET.get('first_name')
+			last_name = request.GET.get('last_name')
+			user = None
+			try:
+				user = CustomUser.objects.get(first_name__icontains=first_name,last_name__icontains=last_name)
+			except:
+				return HttpResponseRedirect(reverse('bank_users:updateUser')+"?update=0")
+			return render(request,'updateUser.html',{'userdetails':user,'iban':user.bank_user.iban})
+		else:
+			updated = True
+			if "update" in request.GET:
+				updated=False
+			userform = UserForm()
+			return render(request,'updateUser.html',{'form':userform,'updated':updated})
 
 def deleteBankingUser(request):
 	return render(request,'deleteUser.html',{})

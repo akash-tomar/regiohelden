@@ -2,6 +2,10 @@
 	<h3>Bank user created.</h3>
 {% endif %}
 
+{% if updated %}
+	<h3>Bank user updated.</h3>
+{% endif %}
+
 <a>Hello {{ user.get_full_name|default:user.username }}!</a>
 <a href="{% url 'bank_users:logout' %}">Logout</a>
 

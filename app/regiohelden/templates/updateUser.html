@@ -1,0 +1,46 @@
+{% load staticfiles %}
+
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="{% static 'js/updateUser.js' %}"></script>
+</head>
+
+<body>
+	<a href="{% url 'bank_users:home' %}">Home</a>
+
+	{% if not updated %}
+		Wrong combination of first name and last name
+	{% endif %}
+
+	{% if userdetails %}
+		<script>
+			var first_name = "{{ userdetails.first_name}}";
+			var last_name = "{{ userdetails.last_name }}";
+			var countrycode = "{{ iban.countrycode }}";
+			var swiftcode = "{{ iban.swiftcode }}";
+			var accountnumber = "{{ iban.accountnumber }}";
+			var checksum = "{{ iban.checksum }}";
+			var url = "{% url 'bank_users:updateUser' %}";
+			var home = 	"{% url 'bank_users:home' %}?update=1";
+			var csrf_token = "{{ csrf_token }}";
+		</script>
+		<div id="block">
+			First name:	<input type="text" name="first_name" value="{{ userdetails.first_name }}" maxlength="30" />
+			Last name:	<input type="text" name="last_name" value="{{ userdetails.last_name }}" maxlength="30" />
+			Country code: <input type="text" name="countrycode" value="{{ iban.countrycode }}" maxlength="2" />
+			Check sum: <input type="text" name="checksum" value="{{ iban.checksum }}" maxlength="2" />
+			Swift code: <input type="text" name="swiftcode" value="{{ iban.swiftcode }}" maxlength="4" />
+			Account Number: <input type="text" name="accountnumber" value="{{ iban.accountnumber }}" maxlength="28" />
+			<input type="submit" id="submit" value="Submit" />
+		</div>
+	{% else %}
+
+		<form action="{% url 'bank_users:updateUser' %}" method="get">
+		    {% csrf_token %}
+		    {{ form }}
+		    <input type="submit" value="Submit" />
+	    </form>
+
+    {% endif %}
+
+</body>
