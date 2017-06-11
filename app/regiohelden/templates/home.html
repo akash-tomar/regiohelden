@@ -1,3 +1,11 @@
+{% if created %}
+	<h3>Bank user created.</h3>
+{% endif %}
+
 <a>Hello {{ user.get_full_name|default:user.username }}!</a>
 <a href="{% url 'bank_users:logout' %}">Logout</a>
-CRUD
+
+<a href="{% url 'bank_users:addUser' %}">Add user</a>
+<a href="{% url 'bank_users:viewUser' %}">View user</a>
+<a href="{% url 'bank_users:updateUser' %}">Update user</a>
+<a href="{% url 'bank_users:deleteUser' %}">Delete user</a>

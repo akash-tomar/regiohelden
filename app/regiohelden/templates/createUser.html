@@ -1,0 +1,9 @@
+{% if not created %}
+	<h3>Bank user creation failed.</h3>
+{% endif %}
+<form action="{% url 'bank_users:addUser' %}" method="post">
+    {% csrf_token %}
+    {{ iban }}
+    {{ userform }}
+    <input type="submit" value="Submit" />
+</form>

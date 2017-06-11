@@ -3,3 +3,4 @@ from .models import *
 # Register your models here.
 admin.site.register(IBANDetail)
 admin.site.register(BankUser)
+admin.site.register(CustomUser)
