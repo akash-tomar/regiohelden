@@ -136,7 +136,7 @@ def updateBankingUser(request):
 		
 		#Check whether the creator of the user is trying to modify or not. If not then raise error.		
 		if request.user.id != user.bank_user.creator.id:
-			return JsonResponse({"failed":"You dont have the permission to delete this user."})
+			return JsonResponse({"failed":"You dont have the permission to update this user."})
 
 		'''this list will keep a track of the fields getting updated so that only those fields need to be saved 
 		in the database'''
