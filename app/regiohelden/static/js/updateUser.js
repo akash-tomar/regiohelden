@@ -26,6 +26,8 @@ $(document).ready(function() {
 function handleRequest(resp) {
 	if(resp.success) {
 		window.location.replace(home);
+	} else {
+		$("body").append(resp.failed);
 	}
 }
 

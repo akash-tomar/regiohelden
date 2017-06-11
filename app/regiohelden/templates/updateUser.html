@@ -7,8 +7,8 @@
 
 <body>
 	<a href="{% url 'bank_users:home' %}">Home</a>
-
-	{% if not updated %}
+	{{ updated }}
+	{% if not_updated %}
 		Wrong combination of first name and last name
 	{% endif %}
 

@@ -23,6 +23,7 @@ def home(request):
 		return HttpResponseRedirect(reverse('bank_users:login'))
 	created = False
 	updated = False
+	deleted = False
 	# import pdb; pdb.set_trace()
 	if 'create' in request.GET:
 		created = request.GET.get('create')
@@ -33,7 +34,10 @@ def home(request):
 	if 'update' in request.GET:
 		if request.GET.get('update')=="1":
 			updated=True
-	return render(request,'home.html',{'created':created,'updated':updated})
+	if 'delete' in request.GET:
+		if request.GET.get('delete')=="1":
+			deleted=True
+	return render(request,'home.html',{'created':created,'updated':updated,'deleted':deleted})
 
 def createBankingUser(request):
 	if request.method=='GET':
@@ -105,15 +109,20 @@ def updateBankingUser(request):
 		body_unicode = request.body.decode('utf-8')
 		data = json.loads(body_unicode)
 
+
+
 		first_name = data.get('old_first_name')
 		last_name = data.get('old_last_name')
 		user = None
-		import pdb; pdb.set_trace()
+		# import pdb; pdb.set_trace()
 		try:
 			user = CustomUser.objects.get(first_name__icontains=first_name,last_name__icontains=last_name)
 		except:
 			return JsonResponse({"failed":"Wrong combination of first name and last name"})
 		
+		if request.user.id != user.bank_user.creator.id:
+			return JsonResponse({"failed":"You dont have the permission to delete this user."})
+
 		updated_fields=[]
 
 		if "first_name" in data:
@@ -153,11 +162,35 @@ def updateBankingUser(request):
 				return HttpResponseRedirect(reverse('bank_users:updateUser')+"?update=0")
 			return render(request,'updateUser.html',{'userdetails':user,'iban':user.bank_user.iban})
 		else:
-			updated = True
 			if "update" in request.GET:
-				updated=False
+				if request.GET.get("update")=="0":
+					userform = UserForm()
+					return render(request,'updateUser.html',{'form':userform,'not_updated':True})
 			userform = UserForm()
-			return render(request,'updateUser.html',{'form':userform,'updated':updated})
+			return render(request,'updateUser.html',{'form':userform})
 
 def deleteBankingUser(request):
-	return render(request,'deleteUser.html',{})
+	if request.method=="POST":
+		# import pdb; pdb.set_trace()
+		first_name = request.POST.get("first_name")
+		last_name = request.POST.get("last_name")
+		user = None
+		try:
+			user = CustomUser.objects.get(first_name__icontains=first_name,last_name__icontains=last_name)
+		except:
+			return HttpResponseRedirect(reverse('bank_users:deleteUser')+"?delete=0")
+		bankuser = user.bank_user
+		iban = bankuser.iban
+
+		user.delete()
+		iban.delete()
+		bankuser.delete()
+		return HttpResponseRedirect(reverse('bank_users:home')+"?delete=1")
+
+	if request.method=="GET":
+		if "delete" in request.GET:
+			if request.GET.get("delete")=="0":
+				userform = UserForm()
+				return render(request,'deleteUser.html',{'form':userform,'not_deleted':True})
+		userform = UserForm()
+		return render(request,'deleteUser.html',{'form':userform})
