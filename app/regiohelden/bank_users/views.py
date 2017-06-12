@@ -127,15 +127,16 @@ def updateBankingUser(request):
 		first_name = request.POST.get('old_first_name')
 		last_name = request.POST.get('old_last_name')
 
+		#Check is user exists
 		user = None
 		try:
 			user = CustomUser.objects.get(first_name__icontains=first_name,last_name__icontains=last_name)
 		except:
-			return JsonResponse({"failed":"Wrong combination of first name and last name"})
+			raise ValueError("Wrong combination of first name and last name")
 		
 		#Check whether the creator of the user is trying to modify or not. If not then raise error.		
 		if request.user.id != user.bank_user.creator.id:
-			return JsonResponse({"failed":"You dont have the permission to update this user."})
+			raise PermissionError("You dont have the permission to update this user.")
 
 		#check the validity of the modified records.
 		if form.is_valid():	
