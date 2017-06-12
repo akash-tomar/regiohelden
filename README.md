@@ -22,11 +22,11 @@ It has been implemented using Django web framework.
 
 Install:
 
-- `VirtualBox <https://www.virtualbox.org/>`_
+- `VirtualBox https://www.virtualbox.org/
 
-- `Vagrant <https://www.vagrantup.com/>`_
+- `Vagrant https://www.vagrantup.com/
 
-- `Ansible <http://www.ansible.com/>`_ 
+- `Ansible http://www.ansible.com/
 
 
 Step 1: **git clone https://github.com/akash-tomar/regiohelden.git**
