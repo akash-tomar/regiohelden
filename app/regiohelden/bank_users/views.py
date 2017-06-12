@@ -31,6 +31,7 @@ def home(request):
 	created = False
 	updated = False
 	deleted = False
+	updated = False
 	# import pdb; pdb.set_trace()
 	if 'create' in request.GET:
 		created = request.GET.get('create')
@@ -121,12 +122,10 @@ def readBankingUser(request):
 def updateBankingUser(request):
 	if request.method=="POST":
 
-		#In python3 byte cannot be converted to json directly therefore it needs to be decoded.
-		body_unicode = request.body.decode('utf-8')
-		data = json.loads(body_unicode)
+		form = UpdateForm(request.POST)
 
-		first_name = data.get('old_first_name')
-		last_name = data.get('old_last_name')
+		first_name = request.POST.get('old_first_name')
+		last_name = request.POST.get('old_last_name')
 
 		user = None
 		try:
@@ -138,37 +137,41 @@ def updateBankingUser(request):
 		if request.user.id != user.bank_user.creator.id:
 			return JsonResponse({"failed":"You dont have the permission to update this user."})
 
-		'''this list will keep a track of the fields getting updated so that only those fields need to be saved 
-		in the database'''
-		updated_fields=[]
+		#check the validity of the modified records.
+		if form.is_valid():	
+			'''this list will keep a track of the fields getting updated so that only those fields need to be saved 
+			in the database'''
+			updated_fields=[]
 
-		if "first_name" in data:
-			user.first_name=data["first_name"]
-			updated_fields.append('first_name')
-		if "last_name" in data:
-			user.last_name=data["last_name"]
-			updated_fields.append('last_name')
-		user.save(update_fields=updated_fields)
+			if user.first_name != form.cleaned_data.get('first_name'):
+				user.first_name=form.cleaned_data.get('first_name')
+				updated_fields.append('first_name')
+			if user.last_name != form.cleaned_data.get('last_name'):
+				user.last_name=form.cleaned_data.get('last_name')
+				updated_fields.append('last_name')
+			user.save(update_fields=updated_fields)
 
-		'''this list will keep a track of the fields getting updated so that only those fields need to be saved 
-		in the database'''
-		updated_fields=[]
-		iban = user.bank_user.iban
-		if 'countrycode' in data:
-			iban.countrycode=data.get('countrycode')
-			updated_fields.append('countrycode')
-		if 'checksum' in data:
-			iban.checksum = data.get('checksum')
-			updated_fields.append('checksum')
-		if 'swiftcode' in data:
-			iban.swiftcode = data.get('swiftcode')
-			updated_fields.append('swiftcode')
-		if 'accountnumber' in data:
-			iban.accountnumber = data.get('accountnumber')
-			updated_fields.append('accountnumber')
+			'''this list will keep a track of the fields getting updated so that only those fields need to be saved 
+			in the database'''
+			updated_fields=[]
+			iban = user.bank_user.iban
+			if iban.countrycode != form.cleaned_data.get('countrycode'):
+				iban.countrycode=form.cleaned_data.get('countrycode')
+				updated_fields.append('countrycode')
+			if iban.checksum != form.cleaned_data.get('checksum'):
+				iban.checksum = form.cleaned_data.get('checksum')
+				updated_fields.append('checksum')
+			if iban.swiftcode != form.cleaned_data.get('swiftcode'):
+				iban.swiftcode = form.cleaned_data.get('swiftcode')
+				updated_fields.append('swiftcode')
+			if iban.accountnumber != form.cleaned_data.get('accountnumber'):
+				iban.accountnumber = form.cleaned_data.get('accountnumber')
+				updated_fields.append('accountnumber')
 
-		iban.save(update_fields=updated_fields)
-		return JsonResponse({"success":True})
+			iban.save(update_fields=updated_fields)
+			return HttpResponseRedirect(reverse('bank_users:home')+"?update=1")
+		else:
+			raise ValueError("Invalid data given")
 
 	if request.method=="GET":
 		#this code will execute when the user has given us the first name and last name and needs other details.
@@ -180,7 +183,8 @@ def updateBankingUser(request):
 				user = CustomUser.objects.get(first_name__icontains=first_name,last_name__icontains=last_name)
 			except:
 				return HttpResponseRedirect(reverse('bank_users:updateUser')+"?update=0")
-			return render(request,'updateUser.html',{'userdetails':user,'iban':user.bank_user.iban})
+			form = UpdateForm()
+			return render(request,'updateUser.html',{'userdetails':user,'iban':user.bank_user.iban,'form':form })
 		
 		#This code will execute when user needs to enter the first name and last name to get the record.
 		else:
