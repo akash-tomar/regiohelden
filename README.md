@@ -20,6 +20,15 @@ It has been implemented using Django web framework.
 
 ## Setup
 
+Install:
+
+- `VirtualBox <https://www.virtualbox.org/>`_
+
+- `Vagrant <https://www.vagrantup.com/>`_
+
+- `Ansible <http://www.ansible.com/>`_ 
+
+
 Step 1: **git clone https://github.com/akash-tomar/regiohelden.git**
 
 Step 2: **cd regiohelden**
