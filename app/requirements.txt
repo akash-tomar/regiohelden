@@ -33,6 +33,6 @@ social-auth-core==1.4.0
 ufw==0.34-rc-0ubuntu2
 unattended-upgrades==0.1
 uritemplate==3.0.0
-urllib3==1.21.1
+urllib3==1.26.5
 virtualenv==15.1.0
 wheel==0.24.0
